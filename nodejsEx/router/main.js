@@ -59,12 +59,16 @@ module.exports = function(app, fs)
 {
 
      app.get('/',function(req,res){
-         res.render('index', {
-             title: "MY HOMEPAGE",
-             length: 5
-         })
-     });
+        var sess = req.session;
 
+
+        res.render('index', {
+            title: "MY HOMEPAGE",
+            length: 5,
+            name: sess.name,
+            username: sess.username
+        })
+    });
 
 
     app.get('/list', function (req, res) {
@@ -88,7 +92,7 @@ module.exports = function(app, fs)
         var username = req.params.username;
 
         // CHECK REQ VALIDITY
-        if(!req.body["password"] && !req.body["name"]){
+        if(!req.body["password"] || !req.body["name"]){
             result["success"] = 0;
             result["error"] = "invalid request";
             res.json(result);
@@ -116,4 +120,73 @@ module.exports = function(app, fs)
             })
         })
     });
+
+    app.delete('/deleteUser/:username', function(req, res){
+        var result = { };
+        //LOAD DATA 데이터를 읽어라
+        fs.readFile(__dirname + "/../data/user.json", "utf8", function(err, data){
+            var users = JSON.parse(data);
+
+            // IF NOT FOUND 없다면? 다르면 ?
+            if(!users[req.params.username]){
+                result["success"] = 0;
+                result["error"] = "not found";
+                res.json(result);
+                return;
+            }
+
+            delete users[req.params.username];
+            fs.writeFile(__dirname + "/../data/user.json",JSON.stringify(users, null, '\t'), "utf8", function(err, data){
+                result["success"] = 1;
+                res.json(result);
+                return;
+            })
+        })
+    });
+
+    app.get('/login/:username/:password', function(req, res){
+        var sess;
+        sess = req.session;
+
+        fs.readFile(__dirname + "/../data/user.json", "utf8", function(err, data){
+            var users = JSON.parse(data);
+            var username = req.params.username;
+            var password = req.params.password;
+            var result = {};
+            if(!users[username]){
+                // USERNAME NOT FOUND 못읽는다 ? 비슷하다 
+                result["success"] = 0;
+                result["error"] = "not found";
+                res.json(result);
+                return;
+            }
+
+            if(users[username]["password"] == password){
+                result["success"] = 1;
+                sess.username = username;
+                sess.name = users[username]["name"];
+                res.json(result);
+
+            }else{
+                result["success"] = 0;
+                result["error"] = "incorrect";
+                res.json(result);
+            }
+        })
+    });
+    app.get('/logout', function(req, res){
+        sess = req.session;
+        if(sess.username){
+            req.session.destroy(function(err){
+                if(err){
+                    console.log(err);
+                }else{
+                    res.redirect('/');
+                }
+            })
+        }else{
+            res.redirect('/');
+        }
+    })
+    
 }
