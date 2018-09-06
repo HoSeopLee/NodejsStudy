@@ -94,20 +94,22 @@ var bodyparser = require('body-parser');
 var session = require('express-session');
 var fs = require('fs');
 
-app.set('views', __dirname + './views');
+app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html',require('ejs').renderFile);
-
 
 app.use(express.static('public'));
 
 app.use(bodyparser.json());
+
+//Express적용
 app.use(bodyparser.urlencoded());
 app.use(session({
     secret: '!@#!@#$!@$@#!@#$@!#$@',
     resave:false,
     saveUninitialized:true
 }));
+
 var router= require('./router/main')(app,fs);
 
 //서버를 맨 나중에 열어주던가 콜백함수로 제어 해야된다.
