@@ -25,7 +25,7 @@ app.get( '/', function(req, res){
 		if(error){
 			console.log('readFile Error');
 		}else{
-			mySqlClient.query('select * from persons', function(error, results){
+			mySqlClient.query('select * from persons2', function(error, results){
 				if(error){
 					console.log('error : ', error.message);
 				}else{
@@ -39,7 +39,7 @@ app.get( '/', function(req, res){
 });
 
 app.get('/delete/:id', function(req, res){
-	mySqlClient.query('delete from persons where id = ?', [req.params.id], 
+	mySqlClient.query('delete from persons2 where id = ?', [req.params.id], 
 			function(error, result){
 				if(error){
 					console.log('delete Error');
@@ -62,7 +62,21 @@ app.get('/insert', function(req, res){
 
 app.get( '/edit/:id', function(req, res){
 	fs.readFile( 'edit.html', 'utf8', function(error, data){
-		mySqlClient.query('select * from persons where id = ?', [req.params.id], 
+		mySqlClient.query('select * from persons2 where id = ?', [req.params.id], 
+				function(error, result){
+					if(error){
+						console.log('readFile Error');
+					}else{
+						res.send( ejs.render(data, { 
+							product : result[0] 
+						}));
+					}
+				});
+	});
+});
+app.get( '/viewContents/:id', function(req, res){
+	fs.readFile( 'viewContents.html', 'utf8', function(error, data){
+		mySqlClient.query('select * from persons2 where id = ?', [req.params.id], 
 				function(error, result){
 					if(error){
 						console.log('readFile Error');
@@ -75,12 +89,13 @@ app.get( '/edit/:id', function(req, res){
 	});
 });
 
+
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.post( '/insert', function(req, res){
 	var body = req.body;
 	
-	mySqlClient.query( 'insert into persons(name, age) values(?, ?)',
-			[ body.name, body.age], 
+	mySqlClient.query( 'insert into persons2(name, age, contents) values(?, ?, ?)',
+			[ body.name, body.age, body.contents], 
 			function(error, result){
 				if(error){
 					console.log('insert error : ', error.message );
@@ -94,8 +109,24 @@ app.post( '/edit/:id', function(req, res){
 	// 변수를 선언합니다.
     var body = req.body;
     // 데이터베이스 쿼리를 실행합니다.
-    mySqlClient.query('update persons SET name=?, age=? WHERE id=?'
-		, [body.name, body.age, body.id ], 
+    mySqlClient.query('update persons2 SET name=?, age=?, contents=? WHERE id=?'
+		, [body.name, body.age, body.contents, body.id], 
+			function(error, result){
+				if(error){
+					console.log('update error : ', error.message );
+				}else{
+					res.redirect('/');
+				}
+    });
+});
+
+
+app.post( '/viewContents/:id', function(req, res){
+	// 변수를 선언합니다.
+    var body = req.body;
+    // 데이터베이스 쿼리를 실행합니다.
+    mySqlClient.query('update persons2 SET name=?, age=?, contents=? WHERE id=?'
+		, [body.name, body.age, body.contents ,body.id ], 
 			function(error, result){
 				if(error){
 					console.log('update error : ', error.message );

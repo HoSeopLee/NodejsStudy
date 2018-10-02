@@ -10,16 +10,20 @@
 			<legend>EDIT DATA</legend>
 			<table>
 				<tr>
-					<td><lable>Id</lable></td>
-					<td><input type="text" name="id" value="<%= product.id  %>" disable /></td>
+					<td><lable>일련번호</lable></td>
+					<td><input type="text" name="id" value="<%= product.id  %>"  /></td disabled>	
 				</tr>			
 				<tr>
-					<td><lable>Name</lable></td>
+					<td><lable>작성자</lable></td>
 					<td><input type="text" name="name" value="<%= product.name  %>" /></td>
 				</tr>
 				<tr>
-					<td><lable>Age</lable></td>
+					<td><lable>제목</lable></td>
 					<td><input type="text" name="age" value="<%= product.age %>" /></td>
+				</tr>
+				<tr>
+					<td><lable>내용</lable></td>
+					<td><input type="text" name="contents" value="<%= product.contents %>" /></td>
 				</tr>
 			</table>
 			<input type="submit" value="Update"/>
