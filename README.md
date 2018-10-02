@@ -16,4 +16,4 @@ Nodjs study (2018.09.04 start)
 - Nodejs_MySQL 연동 
 - Nodejs와 MySQL CRUD 구현
 - Nodejs와 MySQL CRUD 테스트
-- 좀더 다듬어 보기
+- CRUD로 이용하여 게시판 비슷하게 구현 완료
