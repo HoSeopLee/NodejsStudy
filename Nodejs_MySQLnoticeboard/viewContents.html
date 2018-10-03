@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ViewContents</title>
+</head>
+<body>
+	<h1>ViewContents</h1>
+	<form method='post'>
+		<fieldset>
+			<legend>ViewContents</legend>
+			<table style= "width:30%;">		
+				<tr>
+					<td><lable>작성자</lable></td>
+					<td><input style= "width:500%;" type="text" name="name" value="<%= product.name  %>"disabled /></td>
+				</tr>
+				<tr>
+					<td><lable>제목</lable></td>
+					<td><input style= "width:500%;" type="text" name="age" value="<%= product.age %>"disabled /></td>
+				</tr>
+				<tr>
+					<td><lable>내용</lable></td>
+					<td><textarea style= "width:500%; height:500px;" type="text" name="age" value="<%= product.contents %>"disabled ><%= product.contents %></textarea></td>
+				</tr>
+				<tr>
+					<td><a href='/edit/<%= product.id %>' >수정하기</a></td>
+					<td><a href='/' >목록</a></td>	
+					<td><a href="/delete/<%= product.id %>">삭제하기</a></td>				
+				</tr>
+			</table>
+		</fieldset>
+	</body>
+</html>
